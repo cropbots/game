@@ -7,7 +7,7 @@ It combines **exploration, strategy, and coding education** into a single smooth
   Travel across different biomes, each with unique crops, puzzles, and challenges.  
 
 - **Farming with Bots**  
-  Program your **CropBots** to water, fertilize, and harvest automatically.  
+  Program your **Cropbots** to water, fertilize, and harvest automatically.  
   Each new area introduces more complex environmental conditions, requiring smarter code.  
 
 - **Coding Puzzles**  
