@@ -1,6 +1,6 @@
-# 🌱🤖 CropBots
+# 🌱🤖 Cropbots
 
-**CropBots** is an upcoming adventure-coding-farming game where you traverse a vibrant world, plant crops, program bots, solve coding puzzles, and battle against corruption in nature.  
+**Cropbots** is an upcoming adventure-coding-farming game where you traverse a vibrant world, plant crops, program bots, solve coding puzzles, and battle against corruption in nature.  
 It combines **exploration, strategy, and coding education** into a single smooth experience.
 
 - **Adventuring & Exploration**  
