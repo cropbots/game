@@ -24,7 +24,7 @@ It combines **exploration, strategy, and coding education** into a single smooth
 
 ## 🚀 Tech Stack
 
-- **Frontend:** HTML5 / CSS3 / JavaScript  
-- **Sandboxed Execution:** Web Workers / Iframes (safe JS execution)  
+- **Frontend:** HTML5 / CSS3 / JavaScript w/ Kaplay Game Engine
+- **Sandboxed Execution:** Restricted Web Workers w/ Console Forwarding (safe JS execution)  
 - **Hosting:** GitHub Pages (static deployment)  
 - **Future Expansion:** Possible Node.js backend for multiplayer features
