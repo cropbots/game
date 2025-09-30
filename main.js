@@ -5,10 +5,22 @@
 // Imports
 //-------------
 
+
+// Import Kaplay Game Engine from CDN
 import kaplay from "https://unpkg.com/kaplay@3001.0.19/dist/kaplay.mjs";
 
-// VM Worker
+//-------------
+// Constants
+//-------------
 
+const VERSION = "0.0.1";
+console.log("Cropbots version:", VERSION);
+
+//-------------
+// VM Worker
+//-------------
+
+// Create a new web worker using the vm-worker.js script
 const worker = new Worker("workers/vm-worker.js");
 
 // Handle worker messages
@@ -30,10 +42,60 @@ function vm_run(e) {
     });
 }
 
+//-------------
+// Page Dimensions
+//-------------
+
+// Get the page dimensions
 const pageWidth = document.documentElement.scrollWidth;
 const pageHeight = document.documentElement.scrollHeight;
 
-kaplay(/*{
-  width: pageWidth,
-  height: pageHeight
-*/);
+//-------------
+// Kaplay
+//-------------
+
+// Kaplay initialization w/ the bean.
+kaplay();
+loadBean();
+
+//-------------
+// the bean.
+//-------------
+
+// Create your vessel. (Deltarune reference??)
+const player = add([
+    sprite("bean"),
+    pos(80, 40),
+    color(),
+    rotate(0),
+    area(),
+    body(),
+]);
+
+// Define player movement speed
+const SPEED = 320;
+
+// bean movement.
+onKeyDown("a", () => {
+    player.move(-SPEED, 0);
+});
+
+onKeyDown("d", () => {
+    player.move(SPEED, 0);
+});
+
+onKeyDown("w", () => {
+    player.move(0, -SPEED);
+});
+
+onKeyDown("s", () => {
+    player.move(0, SPEED);
+});
+
+//--------------
+// Main game loop (called every frame)
+//--------------
+
+onUpdate(() => {
+    // idk
+})
