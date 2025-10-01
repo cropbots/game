@@ -66,7 +66,7 @@ loadBean();
 // THE SECOND BEANING (Alan Becker reference??)
 const beanObstacle = add([
     sprite("bean"),
-    pos(-320, 0)
+    pos(-320, 0),
     color("wheat"),
     rotate(0),
     area(),
