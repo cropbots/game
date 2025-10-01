@@ -73,26 +73,26 @@ const player = add([
 ]);
 
 // Define player movement speed
-let player.xVel = 0;
-let player.yVel = 0;
-let friction = 0.7;
-const player.speed = 150;
+let player_xVel = 0;
+let player_yVel = 0;
+const friction = 0.7;
+const player_speed = 150;
 
 // bean movement.
 onKeyDown("a", () => {
-    player.xVel -= player.speed
+    player_xVel -= player_speed
 });
 
 onKeyDown("d", () => {
-    player.xVel += player.speed
+    player_xVel += player_speed
 });
 
 onKeyDown("w", () => {
-    player.yVel -= player.speed
+    player_yVel -= player_speed
 });
 
 onKeyDown("s", () => {
-    player.xVel += player.speed
+    player_xVel += player_speed
 });
 
 //--------------
@@ -101,7 +101,7 @@ onKeyDown("s", () => {
 
 onUpdate(() => {
     // Player Movement
-    player.move(player.xVel, player.yVel);
-    xVel *= friction;
-    yVel *= friction;
+    player.move(player_xVel, player_yVel);
+    player_xVel *= friction;
+    player_yVel *= friction;
 })
