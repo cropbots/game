@@ -92,16 +92,17 @@ onKeyDown("w", () => {
 });
 
 onKeyDown("s", () => {
-    player_xVel += player_speed
+    player_yVel += player_speed
 });
 
 //--------------
-// Main game loop (called every frame)
+// Player loop (called every frame)
 //--------------
 
-onUpdate(() => {
+player.onUpdate(() => {
     // Player Movement
     player.move(player_xVel, player_yVel);
     player_xVel *= friction;
     player_yVel *= friction;
+    camPos(player.pos);
 })
