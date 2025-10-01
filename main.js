@@ -59,7 +59,22 @@ kaplay();
 loadBean();
 
 //-------------
-// the bean.
+// Other Objects
+//-------------
+
+
+// THE SECOND BEANING (Alan Becker reference??)
+const beanObstacle = add([
+    sprite("bean"),
+    pos(-320, 0)
+    color("RED"),
+    rotate(0),
+    area(),
+    body({ mass: 10 }),
+])
+
+//-------------
+// the chosen bean. (Alan Becker reference 2??)
 //-------------
 
 // Create your vessel. (Deltarune reference??)
