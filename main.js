@@ -67,7 +67,7 @@ loadBean();
 const beanObstacle = add([
     sprite("bean"),
     pos(-320, 0),
-    color("wheat"),
+    color(255, 202, 79),
     rotate(0),
     area(),
     body({ mass: 10 }),
