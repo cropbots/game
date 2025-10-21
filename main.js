@@ -77,8 +77,9 @@ layers([
     "ui",
 ], "obj");
 
-// Remove the default cursor
+// Remove the default cursor and change the background
 setCursor("none");
+setBackground("1a1a1a");
 
 //-------------
 // Tiling
@@ -88,6 +89,7 @@ loadSprite("map", "./test.png");
 loadSprite("mapFg", "./testFg.png");
 
 async function tiles() {
+  // Load map data
   const mapData = await (await fetch("./test.json")).json();
   const map = add([pos(center()),scale(4),layer("bg")]);
 
@@ -96,6 +98,7 @@ async function tiles() {
   const mapFg = add([pos(center()),scale(4),layer("fg")]);
   mapFg.add([sprite("mapFg")]);
 
+  // Object Layers
   for (const layer of mapData.layers) {
     if (layer.type === "background" || layer.type === "foreground" || layer.type === "overlay") continue;
 
@@ -110,6 +113,41 @@ async function tiles() {
       continue;
     }
   }
+
+  // Edge Colliders
+  const tileW = mapData.tilewidth || 32;
+  const tileH = mapData.tileheight || 32;
+  const mapW = (mapData.width || 0) * tileW;
+  const mapH = (mapData.height || 0) * tileH;
+  const thickness = Math.max(tileW, tileH, 16); // collider thickness in pixels
+
+  // top
+  map.add([
+    pos(0, -thickness),
+    area({ shape: new Rect(vec2(0), mapW, thickness) }),
+    body({ isStatic: true }),
+  ]);
+
+  // bottom
+  map.add([
+    pos(0, mapH),
+    area({ shape: new Rect(vec2(0), mapW, thickness) }),
+    body({ isStatic: true }),
+  ]);
+
+  // left
+  map.add([
+    pos(-thickness, 0),
+    area({ shape: new Rect(vec2(0), thickness, mapH) }),
+    body({ isStatic: true }),
+  ]);
+
+  // right
+  map.add([
+    pos(mapW, 0),
+    area({ shape: new Rect(vec2(0), thickness, mapH) }),
+    body({ isStatic: true }),
+  ]);
 }
 
 tiles();
@@ -126,16 +164,6 @@ const cursor = add([
     scale(1.5),
 ]);
 
-// THE SECOND BEANING (Alan Becker reference??)
-const beanObstacle = add([
-    sprite("bean"),
-    pos(320, 120),
-    color(255, 202, 79),
-    rotate(0),
-    area(),
-    body({ mass: 10 }),
-])
-
 //-------------
 // the chosen bean. (Alan Becker reference 2??)
 //-------------
@@ -150,12 +178,11 @@ const player = add([
     body(),
 ]);
 
-// Define player movement speed
+// Define player movement variables
 const player_speed = 100;
 const friction = 0.7;
 let xVel = 0;
 let yVel = 0;
-
 
 //--------------
 // Game loops (called every frame)
