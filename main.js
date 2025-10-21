@@ -151,27 +151,11 @@ const player = add([
 ]);
 
 // Define player movement speed
-let player_xVel = 0;
-let player_yVel = 0;
-const friction = 0.7;
 const player_speed = 100;
+const friction = 0.7;
+let xVel = 0;
+let yVel = 0;
 
-// bean movement.
-onKeyDown("a", () => {
-    player_xVel -= player_speed
-});
-
-onKeyDown("d", () => {
-    player_xVel += player_speed
-});
-
-onKeyDown("w", () => {
-    player_yVel -= player_speed
-});
-
-onKeyDown("s", () => {
-    player_yVel += player_speed
-});
 
 //--------------
 // Game loops (called every frame)
@@ -179,9 +163,17 @@ onKeyDown("s", () => {
 
 player.onUpdate(() => {
     // Player Movement
-    player.move(player_xVel, player_yVel);
-    player_xVel *= friction;
-    player_yVel *= friction;
+    const inputX = (isKeyDown("d") ? 1 : 0) - (isKeyDown("a") ? 1 : 0);
+    const inputY = (isKeyDown("s") ? 1 : 0) - (isKeyDown("w") ? 1 : 0);
+    
+    xVel += inputX * player_speed;
+    yVel += inputY * player_speed;
+
+    const targetVel = vec2(xVel, yVel);
+    xVel *= friction;
+    yVel *= friction;
+
+    player.vel = targetVel;
     // Camera follow
     setCamPos(getCamPos().lerp(player.pos, 0.12));
 })
