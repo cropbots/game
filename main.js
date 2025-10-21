@@ -9,6 +9,9 @@
 // Import Kaplay Game Engine from CDN
 import kaplay from "https://unpkg.com/kaplay@3001.0.19/dist/kaplay.mjs";
 
+// Import Kaplay Crew from CDN
+import { crew } from 'https://cdn.skypack.dev/@kaplayjs/crew';
+
 //-------------
 // Constants
 //-------------
@@ -54,27 +57,79 @@ const pageHeight = document.documentElement.scrollHeight;
 // Kaplay
 //-------------
 
-// Kaplay initialization w/ the bean.
-kaplay();
+// Kaplay initialization w/ the bean n friends.
+kaplay({
+    plugins: [crew],
+    font: "happy-o",
+});
+
 loadBean();
+loadCrew("font","happy-o");
+loadCrew("sprite", "cursor");
+loadCrew("sprite", "knock");
+loadCrew("sprite", "glady");
+
+// Layers
+layers([
+    "bg",
+    "obj",
+    "fg",
+    "ui",
+], "obj");
+
+// Remove the default cursor
+setCursor("none");
 
 //-------------
 // Tiling
 //-------------
 
-for (let i; i += 1; i > 1000) {
-    // wip
+loadSprite("map", "./test.png");
+loadSprite("mapFg", "./testFg.png");
+
+async function tiles() {
+  const mapData = await (await fetch("./test.json")).json();
+  const map = add([pos(center()),scale(4),layer("bg")]);
+
+  map.add([sprite("map")]);
+
+  const mapFg = add([pos(center()),scale(4),layer("fg")]);
+  mapFg.add([sprite("mapFg")]);
+
+  for (const layer of mapData.layers) {
+    if (layer.type === "background" || layer.type === "foreground" || layer.type === "overlay") continue;
+
+    if (layer.name === "colliders") {
+      for (const object of layer.objects) {
+        map.add([
+          area({ shape: new Rect(vec2(0), object.width, object.height)   }),
+          body({ isStatic: true }),
+          pos(object.x, object.y),
+        ]);
+      }
+      continue;
+    }
+  }
 }
+
+tiles();
 
 //-------------
 // Other Objects
 //-------------
 
+// Alan Becker himself
+const cursor = add([
+    sprite("cursor"),
+    pos(mousePos()),
+    layer("ui"),
+    scale(1.5),
+]);
 
 // THE SECOND BEANING (Alan Becker reference??)
 const beanObstacle = add([
     sprite("bean"),
-    pos(-320, 0),
+    pos(320, 120),
     color(255, 202, 79),
     rotate(0),
     area(),
@@ -88,7 +143,7 @@ const beanObstacle = add([
 // Create your vessel. (Deltarune reference??)
 const player = add([
     sprite("bean"),
-    pos(80, 40),
+    pos(center()),
     color(),
     rotate(0),
     area(),
@@ -99,7 +154,7 @@ const player = add([
 let player_xVel = 0;
 let player_yVel = 0;
 const friction = 0.7;
-const player_speed = 150;
+const player_speed = 100;
 
 // bean movement.
 onKeyDown("a", () => {
@@ -119,7 +174,7 @@ onKeyDown("s", () => {
 });
 
 //--------------
-// Player loop (called every frame)
+// Game loops (called every frame)
 //--------------
 
 player.onUpdate(() => {
@@ -127,5 +182,10 @@ player.onUpdate(() => {
     player.move(player_xVel, player_yVel);
     player_xVel *= friction;
     player_yVel *= friction;
-    camPos(player.pos);
+    // Camera follow
+    setCamPos(getCamPos().lerp(player.pos, 0.12));
+})
+
+cursor.onUpdate(() => {
+    cursor.pos = getCamPos().sub(center()).add(mousePos());
 })
