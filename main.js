@@ -226,9 +226,9 @@ toolbox.onUpdate(() => {
 
 toolbox.onHover(
     () => {
-         toolbox.scaleBy((1.5 - toolbox.scale.x) / 3)
+         toolbox.scaleBy(toolbox.scale.lerp(vec2(1.5,1.5),0.12))
     }, 
     () => {
-         toolbox.scaleBy((1 - toolbox.scale.x) / 3)
+         toolbox.scaleBy(toolbox.scale.lerp(vec2(1,1),0.12))
     }
 )
