@@ -61,6 +61,7 @@ const pageHeight = document.documentElement.scrollHeight;
 kaplay({
     plugins: [crew],
     font: "happy-o",
+    debugKey: "r",
 });
 
 loadBean();
@@ -76,6 +77,7 @@ setLayers([
     "obj",
     "fg",
     "ui",
+    "cur",
 ], "obj");
 
 // Remove the default cursor and change the background
@@ -88,7 +90,78 @@ setBackground("1a1a1a");
 
 loadSprite("map", "./test.png");
 loadSprite("mapFg", "./testFg.png");
+for (let i = 0; i < 223; i++) {
+  loadSprite(`tile-${i}`, `./assets/tiles/${i}.png`);
+}
 
+const mapWidth = 32;
+const mapHeight = 32;
+const tileSize = 64;
+const thickness = Math.max(tileSize, 16); // collider thickness in pixels
+const map = add([pos(center()), scale(1), layer("bg")]);
+let mapFg = [];
+let mapBg = [];
+
+function tiles() {
+  // Background layer
+  for (let y = 0; y < mapHeight; y++) {
+    for (let x = 0; x < mapWidth; x++) {
+      const tileIndex = 24;
+      mapBg.push([`tile-${tileIndex}`, vec2(x * tileSize, y * tileSize)]);
+    }
+  }
+
+  // Foreground layer
+  for (let y = 0; y < mapHeight; y++) {
+    for (let x = 0; x < mapWidth; x++) {
+      const tileIndex = (Math.random() < 0.05) ? 56 + Math.round(Math.random()) : 0;
+      mapFg.push([`tile-${tileIndex}`, vec2(x * tileSize, y * tileSize)]);
+
+      if (tileIndex === 56 || tileIndex === 57) {
+        map.add([
+          area({ shape: new Rect(vec2(0), tileSize, tileSize) }),
+          body({ isStatic: true }),
+          pos(x * tileSize, y * tileSize),
+        ]);
+      }
+    }
+  }
+
+  // top
+  map.add([
+    pos(0, -thickness),
+    area({ shape: new Rect(vec2(0), mapWidth * tileSize, thickness) }),
+    body({ isStatic: true }),
+  ]);
+
+  // bottom
+  map.add([
+    pos(0, mapHeight * tileSize),
+    area({ shape: new Rect(vec2(0), mapWidth * tileSize, thickness) }),
+    body({ isStatic: true }),
+  ]);
+
+  // left
+  map.add([
+    pos(-thickness, 0),
+    area({ shape: new Rect(vec2(0), thickness, mapHeight * tileSize) }),
+    body({ isStatic: true }),
+  ]);
+
+  // right
+  map.add([
+    pos(mapWidth * tileSize, 0),
+    area({ shape: new Rect(vec2(0), thickness, mapHeight * tileSize) }),
+    body({ isStatic: true }),
+  ]);
+
+  // Overlay layer
+  // ...
+}
+
+tiles();
+
+/*
 async function tiles() {
   // Load map data
   const mapData = await (await fetch("./test.json")).json();
@@ -99,7 +172,7 @@ async function tiles() {
   const mapFg = add([pos(center()),scale(4),layer("fg")]);
   mapFg.add([sprite("mapFg")]);
 
-  // Object Layers
+  // Object layers
   for (const layer of mapData.layers) {
     if (layer.type === "background" || layer.type === "foreground" || layer.type === "overlay") continue;
 
@@ -115,7 +188,7 @@ async function tiles() {
     }
   }
 
-  // Edge Colliders
+  // Edge colliders
   const tileW = mapData.tilewidth || 32;
   const tileH = mapData.tileheight || 32;
   const mapW = (mapData.width || 0) * tileW;
@@ -152,6 +225,7 @@ async function tiles() {
 }
 
 tiles();
+*/
 
 //-------------
 // Other Objects
@@ -161,18 +235,34 @@ tiles();
 const cursor = add([
     sprite("cursor"),
     pos(mousePos()),
-    layer("ui"),
+    layer("cur"),
     scale(1),
 ]);
+
+// The hotbar items
+loadSprite("hotbar-slot", "./assets/ui/hotbar-slot.png");
+const hotbarItems = [];
+
+for (let i = 0; i < 5; i++) {
+  hotbarItems.push(add([
+    sprite("hotbar-slot"),
+    pos(50, 50),
+    layer("ui"),
+    scale(3.33),
+    area(),
+    anchor("center"),
+    opacity(0.7),
+  ]));
+}
 
 // The animator's toolkit (Alan Becker reference 2??)
 const toolbox = add([
     sprite("toolbox-o"),
-    pos(20,20),
+    pos(50,45),
     layer("ui"),
     scale(1),
     area(),
-    body({ isStatic: true })
+    anchor("center")
 ])
 
 //-------------
@@ -196,8 +286,10 @@ let xVel = 0;
 let yVel = 0;
 
 // Inventory setup
-let inventory = new Array(36).fill(0);
+let hotbar = new Array(5).fill(0);
 let inventoryToggle = false;
+let toolboxScale = false;
+let selectedItem = null;
 
 //--------------
 // Game loops (called every frame)
@@ -227,21 +319,47 @@ cursor.onUpdate(() => {
 })
 
 // Inventory
+toolbox.onHover(() => {toolboxScale = true});
+toolbox.onHoverEnd(() => {toolboxScale = false});
+
+toolbox.onMouseDown(() => { inventoryToggle = (inventoryToggle) ? false : true });
+
 toolbox.onUpdate(() => {
-    toolbox.pos = getCamPos().sub(center()).add(vec2(20,20));
+    toolbox.pos = getCamPos().sub(center()).add(vec2(50,45));
+    toolbox.scale = toolboxScale ? vec2(1.1,1.1) : vec2(1,1);
 })
 
-toolbox.onHover(
-    () => {
-         toolbox.scaleTo(1.5);
-    }, 
-    () => {
-         toolbox.scaleTo(1);
-    }
-)
+// Hotbar items
+for (let i = 0; i < hotbarItems.length; i++) {
+  hotbarItems[i].onHover(() => {hotbarItems[i].scale = vec2(3.5,3.5)});
+  hotbarItems[i].onHoverEnd(() => {hotbarItems[i].scale = vec2(3.33,3.33)});
+  hotbarItems[i].onUpdate(() => {
+      hotbarItems[i].pos = getCamPos().sub(center()).add(vec2(125 + (i * 75), 50));
+  });
+}
 
-toolBox.onMouseDown(
-    () => {
-        inventoryToggle = (inventoryToggle) ? false : true
+// Draw loop
+map.onDraw(() => {
+    // Draw tiles
+    for (let i = 0; i < mapBg.length; i++) {
+      // Background layer
+      drawSprite({
+        sprite: mapBg[i][0],
+        pos: mapBg[i][1],
+        scale: 4,
+      });
     }
-)
+
+    for (let i = 0; i < mapFg.length; i++) {
+      // Foreground layer
+      drawSprite({
+        sprite: mapFg[i][0],
+        pos: mapFg[i][1],
+        scale: 4,
+      });
+    }
+
+    // Overlay layer
+    // ...
+});
+
