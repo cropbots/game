@@ -172,6 +172,7 @@ const toolbox = add([
     layer("ui"),
     scale(1),
     area(),
+    body({ isStatic: true })
 ])
 
 //-------------
