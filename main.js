@@ -195,10 +195,15 @@ const friction = 0.7;
 let xVel = 0;
 let yVel = 0;
 
+// Inventory setup
+let inventory = new Array(36).fill(0);
+let inventoryToggle = false;
+
 //--------------
 // Game loops (called every frame)
 //--------------
 
+// Player
 player.onUpdate(() => {
     // Player Movement
     const inputX = (isKeyDown("d") ? 1 : 0) - (isKeyDown("a") ? 1 : 0);
@@ -216,10 +221,12 @@ player.onUpdate(() => {
     setCamPos(getCamPos().lerp(player.pos, 0.12));
 })
 
+// Cursor
 cursor.onUpdate(() => {
     cursor.pos = getCamPos().sub(center()).add(mousePos());
 })
 
+// Inventory
 toolbox.onUpdate(() => {
     toolbox.pos = getCamPos().sub(center()).add(vec2(20,20));
 })
@@ -229,6 +236,12 @@ toolbox.onHover(
          toolbox.scaleTo(1.5);
     }, 
     () => {
-         toolbox.scaleBy(1);
+         toolbox.scaleTo(1);
+    }
+)
+
+toolBox.onMouseDown(
+    () => {
+        inventoryToggle = (inventoryToggle) ? false : true
     }
 )
