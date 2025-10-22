@@ -222,5 +222,13 @@ cursor.onUpdate(() => {
 
 toolbox.onUpdate(() => {
     toolbox.pos = getCamPos().sub(center()).add(vec2(20,20));
-    toolbox.scale += (onHover()) ? (1.5 - toolbox.scale) / 3 : (1 - toolbox.scale) / 3
 })
+
+toolbox.onHover(
+    () => {
+         toolbox.scale += (1.5 - toolbox.scale) / 3
+    }, 
+    () => {
+         toolbox.scale += (1 - toolbox.scale) / 3
+    }
+)
