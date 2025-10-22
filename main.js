@@ -226,9 +226,9 @@ toolbox.onUpdate(() => {
 
 toolbox.onHover(
     () => {
-         toolbox.scale += (1.5 - toolbox.scale) / 3
+         toolbox.scaleTo((1.5 - toolbox.scale) / 3)
     }, 
     () => {
-         toolbox.scale += (1 - toolbox.scale) / 3
+         toolbox.scaleTo((1 - toolbox.scale) / 3)
     }
 )
