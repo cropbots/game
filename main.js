@@ -167,10 +167,11 @@ const cursor = add([
 
 // The animator's toolkit (Alan Becker reference 2??)
 const toolbox = add([
-    sprite("toolbox"),
+    sprite("toolbox-o"),
     pos(20,20),
     layer("ui"),
     scale(1),
+    area(),
 ])
 
 //-------------
@@ -220,4 +221,5 @@ cursor.onUpdate(() => {
 
 toolbox.onUpdate(() => {
     toolbox.pos = getCamPos().sub(center()).add(vec2(20,20));
+    toolbox.scale += (onHover()) ? (1.5 - toolbox.scale) / 3 : (1 - toolbox.scale) / 3
 })
