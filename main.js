@@ -68,7 +68,7 @@ loadCrew("font","happy-o");
 loadCrew("sprite", "cursor");
 loadCrew("sprite", "knock");
 loadCrew("sprite", "glady");
-loadCrew("sprite", "toolbox");
+loadCrew("sprite", "toolbox-o");
 
 // Layers
 setLayers([
@@ -168,7 +168,7 @@ const cursor = add([
 // The animator's toolkit (Alan Becker reference 2??)
 const toolbox = add([
     sprite("toolbox"),
-    pos(100,100),
+    pos(20,20),
     layer("ui"),
     scale(1),
 ])
@@ -219,5 +219,5 @@ cursor.onUpdate(() => {
 })
 
 toolbox.onUpdate(() => {
-    toolbox.pos = getCamPos().sub(center()).add(vec2(100,100));
+    toolbox.pos = getCamPos().sub(center()).add(vec2(20,20));
 })
