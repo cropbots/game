@@ -68,9 +68,10 @@ loadCrew("font","happy-o");
 loadCrew("sprite", "cursor");
 loadCrew("sprite", "knock");
 loadCrew("sprite", "glady");
+loadCrew("sprite", "toolbox");
 
 // Layers
-layers([
+setLayers([
     "bg",
     "obj",
     "fg",
@@ -156,16 +157,24 @@ tiles();
 // Other Objects
 //-------------
 
-// Alan Becker himself
+// Alan Becker himself (Alan Becker reference??)
 const cursor = add([
     sprite("cursor"),
     pos(mousePos()),
     layer("ui"),
-    scale(1.5),
+    scale(1),
 ]);
 
+// The animator's toolkit (Alan Becker reference 2??)
+const toolbox = add([
+    sprite("toolbox"),
+    pos(100,100),
+    layer("ui"),
+    scale(1),
+])
+
 //-------------
-// the chosen bean. (Alan Becker reference 2??)
+// the chosen bean. (Alan Becker reference 3??)
 //-------------
 
 // Create your vessel. (Deltarune reference??)
@@ -207,4 +216,8 @@ player.onUpdate(() => {
 
 cursor.onUpdate(() => {
     cursor.pos = getCamPos().sub(center()).add(mousePos());
+})
+
+toolbox.onUpdate(() => {
+    toolbox.pos = getCamPos().sub(center()).add(vec2(100,100));
 })
