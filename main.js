@@ -10,7 +10,7 @@ import { crew } from 'https://cdn.skypack.dev/@kaplayjs/crew';
 //-------------
 // Constants
 //-------------
-const VERSION = "0.0.2";
+const VERSION = "nightly20251023";
 console.log("Cropbots version:", VERSION);
 
 //-------------
