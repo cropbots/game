@@ -2,7 +2,7 @@ from PIL import Image
 import json, math, os, sys
 
 # === CONFIG ===
-TILE_SIZE = 64              # width/height of each tile in px
+TILE_SIZE = 16              # width/height of each tile in px
 ATLAS_COLS = 16             # how many tiles across per row
 INPUT_DIR = "."         # folder containing the individual PNGs
 OUTPUT_IMAGE = "tileset.png"
